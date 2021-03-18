@@ -1,10 +1,14 @@
 package org.ektorp;
 
-import java.io.*;
-import java.util.*;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.fasterxml.jackson.annotation.*;
-import org.ektorp.util.*;
+import org.ektorp.util.Assert;
+
+import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -21,7 +25,7 @@ public class DbInfo implements Serializable {
 	@JsonProperty("compact_running")
 	boolean compactRunning;
 	@JsonProperty("disk_format_version")
-    int diskFormatVersion;
+	int diskFormatVersion;
 	@JsonProperty("disk_size")
 	long diskSize;
 	@JsonProperty("doc_count")
@@ -31,73 +35,86 @@ public class DbInfo implements Serializable {
 	@JsonProperty("instance_start_time")
 	long instanceStartTime;
 	@JsonProperty("purge_seq")
-	int purgeSeq;
+	String purgeSeq;
 	@JsonProperty("update_seq")
-	@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+	@edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
 	JsonNode updateSeq;
 	/**
-	 * Used to future proof this class, if new fields are added by CouchDb they will be found here.
+	 * Used to future proof this class, if new fields are added by CouchDb they
+	 * will be found here.
 	 */
 	private Map<String, Object> unknownFields;
 
 	public boolean isCompactRunning() {
 		return compactRunning;
 	}
+
 	/**
 	 * @return Name of the database
 	 */
 	public String getDbName() {
 		return dbName;
 	}
+
 	/**
 	 * @return Current version of the internal database format on disk
 	 */
 	public int getDiskFormatVersion() {
 		return diskFormatVersion;
 	}
+
 	/**
-	 * @return Current size in Bytes of the database (Note: Size of views indexes on disk are not included)
+	 * @return Current size in Bytes of the database (Note: Size of views
+	 *         indexes on disk are not included)
 	 */
 	public long getDiskSize() {
 		return diskSize;
 	}
+
 	/**
 	 * @return Number of documents (including design documents) in the database.
 	 */
 	public long getDocCount() {
 		return docCount;
 	}
+
 	/**
 	 * @return
 	 */
 	public int getDocDelCount() {
 		return docDelCount;
 	}
+
 	/**
 	 * @return Timestamp of CouchDBs start time (ms)
 	 */
 	public long getInstanceStartTime() {
 		return instanceStartTime;
 	}
+
 	/**
 	 * @return Number of purge operations
 	 */
-	public int getPurgeSeq() {
+	public String getPurgeSeq() {
 		return purgeSeq;
 	}
+
 	/**
 	 * @return Current number of updates to the database
 	 */
 	public long getUpdateSeq() {
 		return updateSeq.asLong();
 	}
+
 	/**
 	 * Cloudant uses generated strings for update sequence.
+	 * 
 	 * @return
 	 */
 	public String getUpdateSeqAsString() {
 		return updateSeq.asText();
 	}
+
 	/**
 	 * @return false if db is an Cloudant instance.
 	 */
@@ -129,7 +146,8 @@ public class DbInfo implements Serializable {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == this) return true;
+		if (o == this)
+			return true;
 		if (o instanceof DbInfo) {
 			DbInfo dbi = (DbInfo) o;
 			return dbName.equals(dbi.dbName);
